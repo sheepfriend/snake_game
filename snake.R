@@ -4,13 +4,14 @@ init<-function(){
 	e$width<-20
 	e$height<-20
 	e$step<-1/20
-	e$dir<-'up'
-	e$lastd<-'up'
+	e$dir<-'none'
+	e$lastd<-'none'
 	e$head<-c(2,2)
 	e$lastx<-2
 	e$lasty<-2
 	e$tail<-data.frame(x=c(),y=c())
 	e$m<-matrix(0,20,20)
+	e$new<-F
 	
 	e$col.fruit<-2
 	e$col.head<-4
@@ -76,10 +77,16 @@ stage1<-function(){
 	}
 	fruit()
 	head()
-	if(!fail()){
+	while(!fail()){
+		print(e$dir)
+		Sys.sleep(0.5)
 		body()
 		drawTable()
-		drawMatrix()
+		drawMatrix()	
+		if(e$new==F){
+			e$new==T
+			break
+		}		
 	}
 }
 stage0<-function(){
@@ -94,14 +101,15 @@ keydown<-function(K){
 		stage1()
 		return(NULL)
 	}
-	if(e$stage==2){
+	else if(e$stage==2){
 		return(NULL)
 	}
-	if(e$stage==1){
-		if(tolower(K)%in%c('up','down','right','left'))
-		e$lastd<-e$dir
-		e$dir<-tolower(K)
-		stage1()
+	else if(e$stage==1){
+		if(tolower(K)%in%c('up','down','right','left')){
+			e$new<-F
+			e$dir<-tolower(K)
+			stage1()
+		}
 	}
 	return(NULL)
 }
